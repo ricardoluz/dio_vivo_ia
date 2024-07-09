@@ -78,15 +78,10 @@ async def post(
     status_code=status.HTTP_200_OK,
     response_model=LimitOffsetPage[AtletaOut2],
 )
-# async def query(limit=3,offset=2,db_session: DatabaseDependency) -> LimitOffsetPage[list[AtletaOut]]:
-# async def query(limit,offset,db_session: DatabaseDependency) -> LimitOffsetPage[AtletaOut2]:
 async def query(db_session: DatabaseDependency) -> LimitOffsetPage[AtletaOut2]:
     atletas: list[AtletaOut2] = (await db_session.execute(select(AtletaModel))).scalars().all()
     
     return paginate([AtletaOut2.model_validate(atleta) for atleta in atletas])
-    return paginate(atletas)
-    # print('p01')
-    # return atletas
 
 
 @router.get(
@@ -114,7 +109,7 @@ async def get(id: UUID4, db_session: DatabaseDependency) -> AtletaOut:
     status_code=status.HTTP_200_OK,
     response_model=AtletaOut,
 )
-async def get(nome:str, db_session: DatabaseDependency) -> AtletaOut:
+async def get_nome(nome:str, db_session: DatabaseDependency) -> AtletaOut:
     atleta: AtletaOut = (
         await db_session.execute(select(AtletaModel).filter_by(nome=nome))
     ).scalars().first()
@@ -134,7 +129,7 @@ async def get(nome:str, db_session: DatabaseDependency) -> AtletaOut:
     status_code=status.HTTP_200_OK,
     response_model=AtletaOut,
 )
-async def get(cpf:str, db_session: DatabaseDependency) -> AtletaOut:
+async def get_cpf(cpf:str, db_session: DatabaseDependency) -> AtletaOut:
     atleta: AtletaOut = (
         await db_session.execute(select(AtletaModel).filter_by(cpf=cpf))
     ).scalars().first()
